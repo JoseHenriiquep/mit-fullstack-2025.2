@@ -7,26 +7,35 @@ const Todo = () => {
     const [headingInput, setHeadingInput] = useState('');
     const [listInputs, setListInputs] = useState({});
 
+    //Adição da Lista
     const handleAddTodo = () => {
-        if (headingInput.trim() !== ' ') {
+        if (headingInput.trim() !== '') {
             setTodos([...todos, {heading: headingInput, listInputs: []}]);
             setHeadingInput('');
         }
         console.log(todos);
     };
 
+    //Adiciona o nome do item da lista a que pertence
+    const handleListInputChange = (index, value) => {
+        setListInputs({...listInputs, [index]: value})
+    };
+
     const handleAddList = (index) => {
         if (listInputs[index] && listInputs[index].trim() !== '') {
             const newTodos = [...todos];
-            newTodos[index].listInputs.push(listInputs[index]);
+            newTodos[index].listInputs.push(listInputs[index]); //Insere no array
             setTodos(newTodos);
             setListInputs({...listInputs, [index]: ''});
         }
     };
 
-    const handleListInputChange = (index, value) => {
-        setListInputs({...listInputs, [index]: value})
+    const handleDeleteTodo = (index) => {
+        const newTodos = [...todos];
+        newTodos.splice(index, 1); //Remove itens
+        setTodos(newTodos)
     }
+    
     
     return(
         <>
@@ -51,10 +60,19 @@ const Todo = () => {
                         <div key={index} className='todo-card'>
                             <div className='heading_todo'>
                                 <h3>{todo.heading}</h3>
-                                <button className='delete-button-heading'>
+                                <button className='delete-button-heading' onClick={() => handleDeleteTodo(index)}>
                                     Delete List
                                 </button>
                             </div>
+
+                            <ul>
+                                {todo.listInputs.map((item, index) => (
+                                    <li key={index} className='todo_inside_list'>
+                                        <p>{item}</p>
+                                    </li>
+                                ))}
+                            </ul>
+
                             <div className='add_list'>
                                 <input 
                                 type="text" 
